@@ -25,42 +25,51 @@ type List struct {
 	len      int
 }
 
-func New()*List{ return (&List{}).Init()}
+func New() *List { return (&List{}).Init() }
 
 // ==================== API =================
+
+func (l *List) Head() *Node {
+	return l.sentinel.Next()
+}
+
+func (l *List) Tail() *Node {
+	return l.sentinel.Prev()
+}
+
+// Pop 弹出啦了
+func (l *List) Pop() *Node {
+
+}
 
 func (l *List) Push(content interface{}) *Node {
 	l.LazyInit()
 	newNode := &Node{Value: content, list: l}
 	lastNo := l.sentinel.prev
-	return l.add(lastNo,newNode)
+	return l.add(lastNo, newNode)
 }
-
-// 删除节点
 
 // ==================== Action ==============
 
-func (l *List)Init ()*List{
+func (l *List) Init() *List {
 	l.sentinel.next = &l.sentinel
 	l.sentinel.prev = &l.sentinel
 	l.sentinel.list = l
-	l.len =0
+	l.len = 0
 	return l
 }
 
-func (l *List)LazyInit (){
+func (l *List) LazyInit() {
 	if l.sentinel.next == nil {
-		 l.Init()
+		l.Init()
 	}
 }
 
-
-func (l *List) add(before, node *Node) *Node {
-	next := before.Next()
-	before.next = node
-	node.prev = before
-	node.next = next
-	next.prev = node
+func (l *List) add(target, node *Node) *Node {
+	node.prev = target
+	node.next = target.next
+	target.next = node
+	node.next.prev = node
 	l.len++
 	return node
 }
